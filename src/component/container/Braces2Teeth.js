@@ -4,6 +4,7 @@ import { PAGE_BRACES2TEETH_TITLE } from '../../constant/index'
 import './Braces2Teeth.scss'
 import UploadImage from '../Braces2Teeth/UploadImage'
 import ExcuteModel from '../Braces2Teeth/ExcuteModel'
+import GroupButton from '../Braces2Teeth/GroupButton'
 const Braces2Teeth = (props) => {
 
     return (
@@ -16,7 +17,10 @@ const Braces2Teeth = (props) => {
                     <UploadImage />
                     <div id="verticalLine"></div>
                     <ExcuteModel />
+                    <div id="verticalLine"></div>
+                    <GroupButton/>
                 </Row>
+               
             </Col>
         </div>
     )

@@ -1,0 +1,13 @@
+#componentGroupButton {
+    margin: 0px;
+}
+
+#componentGroupButton #button {
+    margin-top: 0px;
+}
+
+@media (max-width: 767px) {
+    #componentGroupButton {
+        margin-top: 20px;
+    }
+}

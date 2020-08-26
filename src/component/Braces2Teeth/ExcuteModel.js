@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { Col, Row, Button, Form } from "react-bootstrap"
-
+import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
 import "./ExcuteModel.scss"
 import example from '../../img/example.png'
-import { COMPONENT_UPLOADIMAGE_DELETE_BUTTON } from "../../constant/index"
+import { setSelectedModel } from '../../service/Braces2TeethService'
+import { MODEL_CYCLEGAN, MODEL_WGANGP } from '../../constant/index'
 const ExcuteModel = (props) => {
-    const [radioButton, setRadioButton] = useState(0);
-    const onClick = (nr) => () => {
-        setRadioButton(nr)
+    const [selectedModel, setSelectedModel] = useState("");
+    const changeSelectedModel = (model) => {
+        setSelectedModel(model);
     }
 
-    const deleteImage = () => {
-        alert(1)
-    }
 
     return (
         <div id="componentExcuteModel">
@@ -20,26 +20,35 @@ const ExcuteModel = (props) => {
                 <Row>
                     <Col style={{ paddingLeft: "0px" }}><p> Select model</p></Col>
                     <Col>
-                   
-                        <fieldset>
-                        <Row><Form.Check type="radio" label="CycleGAN" name="radio" id="radioCycleGAN" /></Row>
-                        <Row><Form.Check type="radio" label="WGAN - GP" name="radio" id="radioWGAN-GP" /></Row>
-
-                        </fieldset>
+                        <Form.Group as={Row}>
+                            <fieldset>
+                                <Col><Form.Check onChange={()=> changeSelectedModel(MODEL_CYCLEGAN)} type="radio" label={MODEL_CYCLEGAN} name="radio" id="radioCycleGAN" /></Col>
+                                <Col><Form.Check onChange={()=> changeSelectedModel(MODEL_WGANGP)} type="radio" label={MODEL_WGANGP} name="radio" id="radioWGAN-GP" /></Col>
+                            </fieldset>
+                        </Form.Group>
                     </Col>
-
                 </Row>
                 <Row>
                     <img alt="" src={example} width="256" height="256" className="d-inline-block align-top" />
                 </Row>
-                <Row>
-                    <Button id="button" onClick={deleteImage}>{COMPONENT_UPLOADIMAGE_DELETE_BUTTON}</Button>
-                </Row>
+
             </Col>
+
         </div>
     )
 }
 
+const mapStatetoProps = (state) => {
+    return {
+        image: state.braces2teeth.image,
+        selectedModel: state.braces2teeth.selectedModel,
+    };
+}
 
-export default ExcuteModel;
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    setSelectedModel,
+
+}, dispatch);
+
+export default withRouter(connect(mapStatetoProps, mapDispatchToProps)(ExcuteModel));
 
