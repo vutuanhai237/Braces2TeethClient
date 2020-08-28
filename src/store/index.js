@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 
 
 
-var store = createStore(
+const store = createStore(
     RootReducer,
     compose(applyMiddleware(thunk),
         window.devToolsExtension ? window.devToolsExtension() : f => f)

@@ -1,19 +1,25 @@
-import React, { useState } from "react";
-import { Col, Row, Button, Form } from "react-bootstrap"
+import React, { useState } from 'react';
+import { Col, Row, Button, Form } from 'react-bootstrap'
 import { withRouter } from 'react-router-dom';
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { bindActionCreators } from 'redux';
 import "./ExcuteModel.scss"
-import example from '../../img/example.png'
-import { setSelectedModel } from '../../service/Braces2TeethService'
-import { MODEL_CYCLEGAN, MODEL_WGANGP } from '../../constant/index'
+import example from '../../img/example/example_0.png'
+import { SetSelectedModelAPI } from '../../service/Braces2TeethService'
+import store from '../../store/index';
+import { MODEL_CYCLEGAN, MODEL_WGANGP, BRACES2TEETH_SELECTED_MODEL_ACTION } from '../../constant/index'
 const ExcuteModel = (props) => {
-    const [selectedModel, setSelectedModel] = useState("");
+    // const [selectedModel, setSelectedModel] = useState("");
+    const { uploadedImage } = props;
+    const dispatch = useDispatch()
     const changeSelectedModel = (model) => {
-        setSelectedModel(model);
+        dispatch({
+            type: BRACES2TEETH_SELECTED_MODEL_ACTION,
+            payload: {
+                selectedModel: model
+            } 
+        })
     }
-
-
     return (
         <div id="componentExcuteModel">
             <Col>
@@ -22,14 +28,14 @@ const ExcuteModel = (props) => {
                     <Col>
                         <Form.Group as={Row}>
                             <fieldset>
-                                <Col><Form.Check onChange={()=> changeSelectedModel(MODEL_CYCLEGAN)} type="radio" label={MODEL_CYCLEGAN} name="radio" id="radioCycleGAN" /></Col>
-                                <Col><Form.Check onChange={()=> changeSelectedModel(MODEL_WGANGP)} type="radio" label={MODEL_WGANGP} name="radio" id="radioWGAN-GP" /></Col>
+                                <Col><Form.Check onChange={() => changeSelectedModel(MODEL_CYCLEGAN)} type="radio" label={MODEL_CYCLEGAN} name="radio" id="radioCycleGAN" /></Col>
+                                <Col><Form.Check onChange={() => changeSelectedModel(MODEL_WGANGP)} type="radio" label={MODEL_WGANGP} name="radio" id="radioWGAN-GP" /></Col>
                             </fieldset>
                         </Form.Group>
                     </Col>
                 </Row>
                 <Row>
-                    <img alt="" src={example} width="256" height="256" className="d-inline-block align-top" />
+                    <img alt="" src={uploadedImage} width="256" height="256" className="d-inline-block align-top" />
                 </Row>
 
             </Col>
@@ -39,16 +45,15 @@ const ExcuteModel = (props) => {
 }
 
 const mapStatetoProps = (state) => {
+    const { braces2teeth } = state
     return {
-        image: state.braces2teeth.image,
-        selectedModel: state.braces2teeth.selectedModel,
+        selectedModel: braces2teeth.selectedModel,
+        uploadedImage: braces2teeth.uploadedImage,
     };
 }
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    setSelectedModel,
-
+    
 }, dispatch);
 
 export default withRouter(connect(mapStatetoProps, mapDispatchToProps)(ExcuteModel));
-

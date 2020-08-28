@@ -2,13 +2,16 @@ import {
     postImage,
     postSelectedModel,
 } from '../action/Braces2TeethAction';
-export function setImage(image) {
+export const setImageAPI = (image) => {
     return dispatch => {
-        dispatch(postImage(image));  
+        dispatch(postImage(image));
     }
 }
-export function setSelectedModel(selectedModel) {
+export function SetSelectedModelAPI(props) {
+    
     return dispatch => {
-        dispatch(postSelectedModel(selectedModel));
+        
+        dispatch(postSelectedModel(props));
     }
 }
+
