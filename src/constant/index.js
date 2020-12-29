@@ -14,6 +14,8 @@ export const eng = {
     processed_image: 'Processed image',
     delete: 'Delete',
     upload: 'Upload',
+    download: 'Download',
+    your_image_or: 'your image or',
     capture: 'Capture',
     cycleGAN: 'CycleGAN',
     pix2pix: 'Pix2Pix',

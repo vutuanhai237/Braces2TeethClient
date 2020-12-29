@@ -13,7 +13,7 @@ const Header = (props) => {
             <Navbar className="navbar justify-content-between" bg="white" expand="md">
                 <Navbar.Brand id='headerBrand' href="/">
                     <img alt="" src={leoIcon} width="30" height="30" className="d-inline-block align-top" />
-                    {'  ' + eng.braces2teeth}
+                    &nbsp;&nbsp;{eng.braces2teeth}
                 </Navbar.Brand>
                
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

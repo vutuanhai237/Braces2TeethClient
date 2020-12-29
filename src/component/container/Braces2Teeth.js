@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Row, Form, Button, Modal } from "react-bootstrap";
+import { Col, Row, Form, Spinner, Button, Modal } from "react-bootstrap";
 import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
@@ -7,20 +7,20 @@ export const Braces2Teeth = (props) => {
     const [mode, setMode] = useState('upload')
     const [currentImage, setCurrentImage] = useState(undefined);
     const [currentImageFile, setCurrentImageFile] = useState(undefined);
+    const [currentProcessedImageFile, setCurrentProcessedImageFile] = useState(undefined);
     const [processedImageBase64, setProcessedImageBase64] = useState();
     const [isModalShow, setIsModalShow] = useState(false);
     const uploadButton = useRef(null);
 
     const webcamRef = React.useRef(null);
-    const [imgSrc, setImgSrc] = React.useState(null);
 
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         setCurrentImage(imageSrc);
-    }, [webcamRef, setImgSrc]);
+    }, []);
 
     useEffect(() => {
-        getFileFromBase64(currentImage)
+        getFileFromBase64(currentImage, setCurrentImageFile)
     }, [currentImage])
 
     /**
@@ -30,7 +30,6 @@ export const Braces2Teeth = (props) => {
     const fetchProcessedImage = () => {
         setIsModalShow(true);
         var formdata = new FormData();
-        console.log(currentImageFile)
         formdata.append("file", currentImageFile);
 
         var requestOptions = {
@@ -42,22 +41,28 @@ export const Braces2Teeth = (props) => {
         fetch("http://localhost:6868/predict", requestOptions)
             .then(response => response.text())
             .then(result => {
-                console.log(result);
                 setIsModalShow(false);
                 setProcessedImageBase64(`data:image/png;base64,${result}`);
+                getFileFromBase64(`data:image/png;base64,${result}`, setCurrentProcessedImageFile)
             })
             .catch(error => {
                 console.log('error', error)
             });
     }
 
-    const getFileFromBase64 = (base64) => {
+    /**
+     * Convert an image to file and set it into any state
+     * @param {blob} base64 image under base64 format
+     * @param {callback} callback setState function 
+     * @return {Promise} async function
+     */
+    const getFileFromBase64 = (base64, callback) => {
         const url = base64;
         fetch(url)
             .then(res => res.blob())
             .then(blob => {
                 const file = new File([blob], "image.png", { type: "image/png" });
-                setCurrentImageFile(file)
+                callback(file)
                 return file;
             })
     }
@@ -76,7 +81,6 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const uploadImage = (event) => {
-        console.log("FILE");
         getBase64(event.target.files[0]).then(data => {
             setCurrentImage(data);
         });
@@ -84,7 +88,8 @@ export const Braces2Teeth = (props) => {
     }
 
     const changeMode = (mode) => {
-        setCurrentImage(null);
+        setCurrentImage(undefined);
+        setProcessedImageBase64(undefined);
         setMode(mode);
     }
 
@@ -100,7 +105,7 @@ export const Braces2Teeth = (props) => {
             <Row>
                 <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
                 <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadImage} />
-                <Button id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
+                <Button disabled={typeof currentImage === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
             </Row>
         </Col>
     }
@@ -114,13 +119,11 @@ export const Braces2Teeth = (props) => {
                 {currentImage && <p style={{ marginTop: '12px' }}>Your image </p>}
             </Row>
             <Row>
-
                 {currentImage && <img id="image" className="mirror-effect" alt="" src={currentImage} />}
             </Row>
-
             <Row>
                 <Button id="button" onClick={capture}>{eng.capture}</Button>
-                <Button id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
+                <Button disabled={typeof currentImage === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
 
             </Row>
         </Col>
@@ -131,13 +134,19 @@ export const Braces2Teeth = (props) => {
         <div id="pageBraces2Teeth">
             <Modal size="sm" backdrop="static"
                 keyboard={false} show={isModalShow} onHide={() => setIsModalShow(false)} aria-labelledby="example-modal-sizes-title-sm">
-                <Modal.Header>
+                <Modal.Header style={{ justifyContent: "center"}}>
                     <Modal.Title>
                         {eng.notification}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {eng.server_is_loading_model + ' ...'}
+                    <Col>
+                        <Row style={{ justifyContent: "center", marginBottom: "10px" }}>
+                            <Spinner animation="grow" />
+                        </Row>
+                        <Row style={{ justifyContent: "center"}}> {eng.server_is_loading_model + ' ...'}
+                        </Row>
+                    </Col>
                 </Modal.Body>
             </Modal>
             <Col>
@@ -148,9 +157,9 @@ export const Braces2Teeth = (props) => {
                     <div id="componentUploadImage">
                         <Col>
                             <Row>
-                                <div onClick={() => changeMode('upload')}><p id="link">Upload</p></div>
-                                <p style={{ marginLeft: "6px" }}>your image or</p>
-                                <div style={{ marginLeft: "6px" }} onClick={() => changeMode('webcam')} id="link" ><p>take from Webcam</p></div>
+                                <div onClick={() => changeMode('upload')}><p id="link">{eng.upload}&nbsp;</p></div>
+                                <p>{eng.your_image_or}&nbsp;</p>
+                                <div onClick={() => changeMode('webcam')} id="link" ><p>take from Webcam</p></div>
                             </Row>
                         </Col>
 
@@ -171,15 +180,19 @@ export const Braces2Teeth = (props) => {
                                     </Form.Group>
                                 </Col>
                             </Row> */}
-                             <Row>
+                            <Row>
                                 <p>{eng.processed_image}</p>
                             </Row>
                             <Row>
                                 <img id="image" alt="" src={processedImageBase64} className="d-inline-block align-top" />
                             </Row>
+                            <Row>
+                                {currentProcessedImageFile && <Button id="button" href={URL.createObjectURL(currentProcessedImageFile)} download>{eng.download}</Button>}
+
+                            </Row>
                         </Col>
-                        
-                    <div id="verticalLine"></div>
+
+                        <div id="verticalLine"></div>
                     </div>}
                 </Row>
 
