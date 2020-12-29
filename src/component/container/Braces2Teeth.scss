@@ -1,22 +1,61 @@
 #pageBraces2Teeth {
-    margin-left: 40px;
-    margin-right: 40px;
-    margin-bottom: 20px;
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-bottom: 20px;
 }
 
 #pageBraces2Teeth #pageTitle {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 #verticalLine {
-    border-left: 1px solid rgba(0,0,0,.2);
-    height: 300px;
-    margin-left: 30px;
-    margin-right: 30px;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+#componentUploadImage {
+  margin: 0px;
+}
+
+#componentUploadImage #link {
+  color: rgb(0, 122, 255);
+}
+
+#componentUploadImage #link:hover {
+  text-decoration: underline;
+}
+
+#componentExcuteModel {
+  margin: 0px;
+}
+
+#componentExcuteModel #link {
+  color: rgb(0, 122, 255);
+}
+
+#componentExcuteModel #link:hover {
+  text-decoration: underline;
+}
+
+#image {
+  height: 256px;
+  width: 256px;
+}
+
+.mirror-effect {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 @media (max-width: 767px) {
-    #verticalLine {
-        height: 0px;
-    }
+  #componentUploadImage #image {
+    margin-top: 0px;
+  }
+}
+
+@media (max-width: 767px) {
+  #verticalLine {
+    height: 0px;
+  }
 }

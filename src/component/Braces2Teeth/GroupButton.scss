@@ -3,7 +3,19 @@
 }
 
 #componentGroupButton #button {
+    margin-top: 10px;
+}
+
+#componentGroupButton #circelButton {
     margin-top: 0px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+#componentGroupButton #textRightCircleButton {
+    vertical-align: middle;
+    margin-left: 10px;
 }
 
 @media (max-width: 767px) {
