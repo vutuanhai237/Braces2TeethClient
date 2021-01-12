@@ -44,7 +44,7 @@ export const Braces2Teeth = (props) => {
             counttemp = counttemp - 1
             setCount(counttemp) 
         },1000)
-        fetch("http://test.braces2teeth.tk/process", requestOptions)
+        fetch("https://test.braces2teeth.tk/process", requestOptions)
             .then(response => response.text())
             .then(result => {
                 setIsModalShow(false);
