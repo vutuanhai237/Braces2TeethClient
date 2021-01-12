@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Row, Form, Spinner, Button, Modal } from "react-bootstrap";
+import { Col, Row, Spinner, Button, Modal } from "react-bootstrap";
 import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
@@ -9,6 +9,7 @@ export const Braces2Teeth = (props) => {
     const [currentImageFile, setCurrentImageFile] = useState(undefined);
     const [currentProcessedImageFile, setCurrentProcessedImageFile] = useState(undefined);
     const [processedImageBase64, setProcessedImageBase64] = useState();
+    const [count, setCount] = useState(30);
     const [isModalShow, setIsModalShow] = useState(false);
     const uploadButton = useRef(null);
 
@@ -38,12 +39,18 @@ export const Braces2Teeth = (props) => {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:6868/predict", requestOptions)
+        var counttemp = 30;
+        const timeinterval = setInterval(() => { 
+            counttemp = counttemp - 1
+            setCount(counttemp) 
+        },1000)
+        fetch("http://test.braces2teeth.tk/process", requestOptions)
             .then(response => response.text())
             .then(result => {
                 setIsModalShow(false);
                 setProcessedImageBase64(`data:image/png;base64,${result}`);
                 getFileFromBase64(`data:image/png;base64,${result}`, setCurrentProcessedImageFile)
+                clearInterval(timeinterval)
             })
             .catch(error => {
                 console.log('error', error)
@@ -144,7 +151,7 @@ export const Braces2Teeth = (props) => {
                         <Row style={{ justifyContent: "center", marginBottom: "10px" }}>
                             <Spinner animation="grow" />
                         </Row>
-                        <Row style={{ justifyContent: "center"}}> {eng.server_is_loading_model + ' ...'}
+                        <Row style={{ justifyContent: "center"}}> {eng.server_is_loading_model + ' ... in ' + count + 's'}
                         </Row>
                     </Col>
                 </Modal.Body>
