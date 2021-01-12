@@ -3,6 +3,7 @@ import { Col, Row, Spinner, Button, Modal } from "react-bootstrap";
 import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
+import CropImage from './CropImage'
 export const Braces2Teeth = (props) => {
     const [mode, setMode] = useState('upload')
     const [currentImage, setCurrentImage] = useState(undefined);
@@ -170,23 +171,12 @@ export const Braces2Teeth = (props) => {
                             </Row>
                         </Col>
 
-
+                        <CropImage currentImage={currentImage}/>
                         {mode === 'upload' ? UploadComponent() : WebcamComponent()}
                     </div>
                     {currentImage && <div id="verticalLine"></div>}
                     {processedImageBase64 && <div id="componentExcuteModel">
                         <Col>
-                            {/* <Row>
-                                <Col style={{ paddingLeft: "0px" }}><p>{eng.select_model}</p></Col>
-                                <Col>
-                                    <Form.Group as={Row}>
-                                        <fieldset>
-                                            <Col><Form.Check onChange={() => setCurrentImage(eng.cycleGAN)} type="radio" label={eng.cycleGAN} name="radio" id="radioCycleGAN" /></Col>
-                                            <Col><Form.Check onChange={() => setCurrentImage(eng.pix2pix)} type="radio" label={eng.pix2pix} name="radio" id="radioPix2Pix" /></Col>
-                                        </fieldset>
-                                    </Form.Group>
-                                </Col>
-                            </Row> */}
                             <Row>
                                 <p>{eng.processed_image}</p>
                             </Row>
