@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-
+import { Col, Row } from "react-bootstrap";
 import './CropImage.scss';
 
-const CropImage = (props) => {
-    const [src, setSrc] = useState(props.currentImage);
+const CropImage = ({currentImage, parentCallback}) => {
+    const [src, setSrc] = useState(currentImage);
     const [imageRef, setImageRef] = useState();
     const [croppedImageUrl, setCroppedImageUrl] = useState(null);
-    const [fileUrl, setFileUrl] = useState();
     const [crop, setCrop] = useState({
         unit: '%',
         width: 30,
@@ -16,17 +15,8 @@ const CropImage = (props) => {
     });
 
     useEffect(() => {
-        setSrc(props.currentImage)
-    }, [props.currentImage])
-    const onSelectFile = (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const reader = new FileReader();
-            reader.addEventListener('load', () =>
-                setSrc(reader.result)
-            );
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    };
+        setSrc(currentImage)
+    }, [currentImage])
 
     // If you setState the crop in here you should return false.
     const onImageLoaded = (image) => {
@@ -51,6 +41,8 @@ const CropImage = (props) => {
                 'newFile.png'
             );
             setCroppedImageUrl(croppedImageUrl);
+            parentCallback(croppedImageUrl);
+            //props.parentCallBack(croppedImageUrl)
         }
     }
 
@@ -81,8 +73,6 @@ const CropImage = (props) => {
                     return;
                 }
                 blob.name = fileName;
-                window.URL.revokeObjectURL(fileUrl);
-               
                 resolve(window.URL.createObjectURL(blob));
             }, 'image/png');
         });
@@ -91,22 +81,31 @@ const CropImage = (props) => {
 
     // const { crop, croppedImageUrl, src } = this.state;
     return (
-        <div className="App">
+        <Col>
+            <Row>
+                {src && <p>This image must be at 1:1 scale (best at 256px x 256px)</p>}
+            </Row>
+            <Row>
+                {src && (
+                    <ReactCrop
+                        src={src}
+                        crop={crop}
+                        ruleOfThirds
+                        onImageLoaded={onImageLoaded}
+                        onComplete={onCropComplete}
+                        onChange={onCropChange}
+                    />
+                )}
+            </Row>
+                {src && <hr></hr>}
+            <Row>
+                {croppedImageUrl && (
+                    <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+                )}
 
-            {src && (
-                <ReactCrop
-                    src={src}
-                    crop={crop}
-                    ruleOfThirds
-                    onImageLoaded={onImageLoaded}
-                    onComplete={onCropComplete}
-                    onChange={onCropChange}
-                />
-            )}
-            {croppedImageUrl && (
-                <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-            )}
-        </div>
+            </Row>
+
+        </Col>
     );
 
 }

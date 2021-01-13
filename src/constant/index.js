@@ -1,5 +1,5 @@
 export const global = {
-    host: '',
+    host: 'http://localhost:6868',
     port: '',
     github: 'https://github.com/vutuanhai237',
     youtube: 'https://www.youtube.com/channel/UCeT_vjcZwjXEzTOFtEX-PZg/',
@@ -7,6 +7,7 @@ export const global = {
     facebook: 'https://www.facebook.com/vutuanhai237',
 }
 export const eng = {
+    get: 'Get',
     select_model: 'Select model',
     process: 'Process',
     notification: 'Notification',
@@ -21,6 +22,7 @@ export const eng = {
     pix2pix: 'Pix2Pix',
     monadotory: 'Monadotory',
     braces2teeth: 'Braces2teeth',
+    braces2teethVideo: 'Braces2teeth Video',
     research_notebook: 'Research notebook',
     life_notebook: 'Life notebook',
     The_resonsitory_of_my_knowledges: 'The resonsitory of my knowledges',

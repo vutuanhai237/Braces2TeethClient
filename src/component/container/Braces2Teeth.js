@@ -4,6 +4,7 @@ import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
 import CropImage from './CropImage'
+import { global } from '../../constant'
 export const Braces2Teeth = (props) => {
     const [mode, setMode] = useState('upload')
     const [currentImage, setCurrentImage] = useState(undefined);
@@ -22,9 +23,16 @@ export const Braces2Teeth = (props) => {
     }, []);
 
     useEffect(() => {
-        getFileFromBase64(currentImage, setCurrentImageFile)
+        //getFileFromBase64(currentImage, setCurrentImageFile)
     }, [currentImage])
-
+    /**
+    * Callback function for CropImage component
+    * @param {string} url
+    * @return {void} 
+    */
+    const updateCroppedImage = (imgURL) => {
+        getFileFromBase64(imgURL, setCurrentImageFile)
+    }
     /**
     * Get processed image from flask server and set it into state
     * @return {void} 
@@ -33,7 +41,6 @@ export const Braces2Teeth = (props) => {
         setIsModalShow(true);
         var formdata = new FormData();
         formdata.append("file", currentImageFile);
-
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -45,7 +52,7 @@ export const Braces2Teeth = (props) => {
             counttemp = counttemp - 1
             setCount(counttemp) 
         },1000)
-        fetch("https://test.braces2teeth.tk/process", requestOptions)
+        fetch(`${global.host}/process`, requestOptions)
             .then(response => response.text())
             .then(result => {
                 setIsModalShow(false);
@@ -108,12 +115,12 @@ export const Braces2Teeth = (props) => {
         return <Col>
 
             <Row>
-                {currentImage && <img id="image" alt="" src={currentImage} />}
+                {/* {currentImage && <img id="image" alt="" src={currentImage} />} */}
             </Row>
             <Row>
                 <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
                 <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadImage} />
-                <Button disabled={typeof currentImage === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
+                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
             </Row>
         </Col>
     }
@@ -131,7 +138,7 @@ export const Braces2Teeth = (props) => {
             </Row>
             <Row>
                 <Button id="button" onClick={capture}>{eng.capture}</Button>
-                <Button disabled={typeof currentImage === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
+                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
 
             </Row>
         </Col>
@@ -171,7 +178,7 @@ export const Braces2Teeth = (props) => {
                             </Row>
                         </Col>
 
-                        <CropImage currentImage={currentImage}/>
+                        <CropImage parentCallback = {(img) => updateCroppedImage(img)} currentImage={currentImage}/>
                         {mode === 'upload' ? UploadComponent() : WebcamComponent()}
                     </div>
                     {currentImage && <div id="verticalLine"></div>}

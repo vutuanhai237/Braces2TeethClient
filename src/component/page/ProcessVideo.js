@@ -1,11 +1,11 @@
 import React from "react";
 import Header from "../container/Header"
-import { Braces2Teeth } from "../container/Braces2Teeth"
+import { ProcessVideo } from "../container/ProcessVideo"
 const Home = (props) => {
     return (
         <div>
             <Header />
-            <Braces2Teeth />
+            <ProcessVideo />
         </div>
     );
 
