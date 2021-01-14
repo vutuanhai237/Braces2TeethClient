@@ -4,7 +4,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { Col, Row } from "react-bootstrap";
 import './CropImage.scss';
 
-const CropImage = ({currentImage, parentCallback}) => {
+const CropImage = ({isReset, currentImage, parentCallback}) => {
     const [src, setSrc] = useState(currentImage);
     const [imageRef, setImageRef] = useState();
     const [croppedImageUrl, setCroppedImageUrl] = useState(null);
@@ -15,6 +15,9 @@ const CropImage = ({currentImage, parentCallback}) => {
     });
 
     useEffect(() => {
+        if (isReset) {
+            setCroppedImageUrl(null);
+        }
         setSrc(currentImage)
     }, [currentImage])
 

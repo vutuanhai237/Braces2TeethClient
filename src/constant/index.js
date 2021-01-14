@@ -7,6 +7,9 @@ export const global = {
     facebook: 'https://www.facebook.com/vutuanhai237',
 }
 export const eng = {
+    ok: 'OK',
+    alert: 'Alert',
+    take_a_shot: 'take a shot',
     get: 'Get',
     select_model: 'Select model',
     process: 'Process',
@@ -22,7 +25,7 @@ export const eng = {
     pix2pix: 'Pix2Pix',
     monadotory: 'Monadotory',
     braces2teeth: 'Braces2teeth',
-    braces2teethVideo: 'Braces2teeth Video',
+    braces2teeth_video: 'Braces2teeth Video',
     research_notebook: 'Research notebook',
     life_notebook: 'Life notebook',
     The_resonsitory_of_my_knowledges: 'The resonsitory of my knowledges',

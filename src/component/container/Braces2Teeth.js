@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Row, Spinner, Button, Modal } from "react-bootstrap";
+import { Col, Row, Button } from "react-bootstrap";
 import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
 import CropImage from './CropImage'
 import { global } from '../../constant'
+import {ModalCustom} from './ModalCustom'
 export const Braces2Teeth = (props) => {
     const [mode, setMode] = useState('upload')
     const [currentImage, setCurrentImage] = useState(undefined);
@@ -13,6 +14,9 @@ export const Braces2Teeth = (props) => {
     const [processedImageBase64, setProcessedImageBase64] = useState();
     const [count, setCount] = useState(30);
     const [isModalShow, setIsModalShow] = useState(false);
+    const [contentModal, setContentModal] = useState('');
+    const [titleModal, setTitleModal] = useState('');
+
     const uploadButton = useRef(null);
 
     const webcamRef = React.useRef(null);
@@ -20,6 +24,7 @@ export const Braces2Teeth = (props) => {
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         setCurrentImage(imageSrc);
+        setMode('upload');
     }, []);
 
     useEffect(() => {
@@ -38,6 +43,7 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const fetchProcessedImage = () => {
+        setTitleModal(eng.notification);
         setIsModalShow(true);
         var formdata = new FormData();
         formdata.append("file", currentImageFile);
@@ -48,10 +54,10 @@ export const Braces2Teeth = (props) => {
         };
 
         var counttemp = 30;
-        const timeinterval = setInterval(() => { 
+        const timeinterval = setInterval(() => {
             counttemp = counttemp - 1
-            setCount(counttemp) 
-        },1000)
+            setCount(counttemp)
+        }, 1000)
         fetch(`${global.host}/process`, requestOptions)
             .then(response => response.text())
             .then(result => {
@@ -96,14 +102,23 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const uploadImage = (event) => {
-        getBase64(event.target.files[0]).then(data => {
-            setCurrentImage(data);
-        });
-        //setCurrentImageFile(event.target.files[0])
+        const file = event.target.files[0];
+        const extensionType = ['jpg', 'jpeg', 'png']
+        const fileType = file.name.split('.')[file.name.split('.').length - 1];
+        if (extensionType.includes(fileType)) {
+            getBase64(file).then(data => {
+                setCurrentImage(data);
+            });
+        } else {
+            setIsModalShow(true);
+            setTitleModal(eng.alert);
+            setContentModal('Please upload jpg, png or jpeg file!');
+        }
     }
 
     const changeMode = (mode) => {
         setCurrentImage(undefined);
+        setCurrentImageFile(undefined);
         setProcessedImageBase64(undefined);
         setMode(mode);
     }
@@ -147,26 +162,18 @@ export const Braces2Teeth = (props) => {
 
     return (
         <div id="pageBraces2Teeth">
-            <Modal size="sm" backdrop="static"
-                keyboard={false} show={isModalShow} onHide={() => setIsModalShow(false)} aria-labelledby="example-modal-sizes-title-sm">
-                <Modal.Header style={{ justifyContent: "center"}}>
-                    <Modal.Title>
-                        {eng.notification}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Col>
-                        <Row style={{ justifyContent: "center", marginBottom: "10px" }}>
-                            <Spinner animation="grow" />
-                        </Row>
-                        <Row style={{ justifyContent: "center"}}> {eng.server_is_loading_model + ' ... in ' + count + 's'}
-                        </Row>
-                    </Col>
-                </Modal.Body>
-            </Modal>
+            <ModalCustom 
+                isShow={isModalShow} 
+                title={titleModal} 
+                variant={titleModal === eng.alert ? 'danger' : 'success'}
+                content={titleModal === eng.alert ? contentModal : eng.server_is_loading_model + ' in ' + count + 's ...'}
+                onHide={()=>setIsModalShow(false)}
+                onClick={()=>setIsModalShow(false)}
+                isShowFooter={titleModal === eng.alert ? true: false}>    
+            </ModalCustom>
             <Col>
                 <Row>
-                    <p id="pageTitle">{eng.braces2teeth + ' | ' + eng.cycleGAN}</p>
+                    <p id="pageTitle">{eng.braces2teeth}</p>
                 </Row>
                 <Row>
                     <div id="componentUploadImage">
@@ -174,11 +181,11 @@ export const Braces2Teeth = (props) => {
                             <Row>
                                 <div onClick={() => changeMode('upload')}><p id="link">{eng.upload}&nbsp;</p></div>
                                 <p>{eng.your_image_or}&nbsp;</p>
-                                <div onClick={() => changeMode('webcam')} id="link" ><p>take from Webcam</p></div>
+                                <div onClick={() => changeMode('webcam')} id="link" ><p>{eng.take_a_shot}</p></div>
                             </Row>
                         </Col>
 
-                        <CropImage parentCallback = {(img) => updateCroppedImage(img)} currentImage={currentImage}/>
+                        <CropImage isReset={typeof currentImage === 'undefined' ? true : false} parentCallback={(img) => updateCroppedImage(img)} currentImage={currentImage} />
                         {mode === 'upload' ? UploadComponent() : WebcamComponent()}
                     </div>
                     {currentImage && <div id="verticalLine"></div>}

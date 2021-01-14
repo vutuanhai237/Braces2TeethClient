@@ -1,14 +1,17 @@
 import React, { useRef, useState } from "react";
-import { Col, Row, Spinner, Button, Modal } from "react-bootstrap";
+import { Col, Row, Button } from "react-bootstrap";
 import './ProcessVideo.scss';
 import { eng, global } from '../../constant'
 import ReactPlayer from 'react-player'
+import { ModalCustom} from './ModalCustom'
 export const ProcessVideo = (props) => {
     const [currentVideo, setCurrentVideo] = useState(undefined);
     const [processedVideoURL, setProcessedVideoURL] = useState(undefined);
     const [currentVideoURL, setCurrentVideoURL] = useState(undefined);
     const [count, setCount] = useState(undefined);
     const [isModalShow, setIsModalShow] = useState(false);
+    const [contentModal, setContentModal] = useState('');
+    const [titleModal, setTitleModal] = useState('');
     const [isGet, setIsGet] = useState(false);
     const uploadButton = useRef(null);
     /**
@@ -37,6 +40,7 @@ export const ProcessVideo = (props) => {
             counttemp = counttemp - 1
             setCount(counttemp)
         }, 1000)
+        setTitleModal(eng.notification);
         setIsModalShow(true);
         fetch(`${global.host}/processvideo`, requestOptions)
             .then(response => response.text())
@@ -55,11 +59,19 @@ export const ProcessVideo = (props) => {
     * @param {Event} file that are from upload button
     * @return {void} 
     */
-    const uploadImage = (event) => {
-        setCurrentVideo(event.target.files[0])
-        setCurrentVideoURL(URL.createObjectURL(event.target.files[0]))
+    const uploadVideo = (event) => {
+        const file = event.target.files[0];
+        const extensionType = ['mp4']
+        const fileType = file.name.split('.')[file.name.split('.').length-1];
+        if (extensionType.includes(fileType)) {
+            setCurrentVideo(file)
+            setCurrentVideoURL(URL.createObjectURL(file))
+        } else {
+            setTitleModal(eng.alert);
+            setIsModalShow(true);
+            setContentModal('Please upload mp4 file!');
+        }
 
-        console.log(URL.createObjectURL(event.target.files[0]))
     }
   
     const triggerUploadButton = () => {
@@ -68,33 +80,26 @@ export const ProcessVideo = (props) => {
 
     return (
         <div id="pageBraces2Teeth">
-            <Modal size="sm" backdrop="static"
-                keyboard={false} show={isModalShow} onHide={() => setIsModalShow(false)} aria-labelledby="example-modal-sizes-title-sm">
-                <Modal.Header style={{ justifyContent: "center" }}>
-                    <Modal.Title>
-                        {eng.notification}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Col>
-                        <Row style={{ justifyContent: "center", marginBottom: "10px" }}>
-                            <Spinner animation="grow" />
-                        </Row>
-                        <Row style={{ justifyContent: "center" }}> {eng.server_is_loading_model + ' ... in ' + count + 's'}
-                        </Row>
-                    </Col>
-                </Modal.Body>
-            </Modal>
+            <ModalCustom 
+                isShow={isModalShow} 
+                title={titleModal} 
+                variant={titleModal === eng.alert ? 'danger' : 'success'}
+                content={titleModal === eng.alert ? contentModal : eng.server_is_loading_model + ' in ' + count + 's ...'}
+                onHide={()=>setIsModalShow(false)}
+                onClick={()=>setIsModalShow(false)}
+                isShowFooter={titleModal === eng.alert ? true: false}>    
+            </ModalCustom>
+
             <Col>
                 <Row>
-                    <p id="pageTitle">{eng.braces2teethVideo + ' | ' + eng.cycleGAN}</p>
+                    <p id="pageTitle">{eng.braces2teeth_video}</p>
                 </Row>
                 <Row>
                     {currentVideoURL && <ReactPlayer controls={true} url={currentVideoURL} />}
                 </Row>
                 <Row>
                     <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
-                    <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadImage} />
+                    <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadVideo} />
                     <Button disabled={typeof currentVideoURL === 'undefined'} id="button" onClick={requireProcessVideo}>{eng.process}</Button>
                     <Button id="button" disabled={!isGet} onClick={fetchProcessedVideo}>{eng.get}</Button>
                 

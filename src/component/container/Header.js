@@ -20,8 +20,11 @@ const Header = (props) => {
                 <Navbar.Collapse className="justify-content-end">
                     <Nav className="justify-content-center">
                         {/* Menu */}
-                        <Nav.Link className="menu-item" href="/brace2teeth">
+                        <Nav.Link className="menu-item" href="/process">
                             {eng.braces2teeth}
+                        </Nav.Link>
+                        <Nav.Link className="menu-item" href="/processvideo">
+                            {eng.braces2teeth_video}
                         </Nav.Link>
                         <Nav.Link className="menu-item" href="/research">
                             {eng.research_notebook}
