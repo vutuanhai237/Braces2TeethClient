@@ -3,12 +3,12 @@ import { Col, Row, Button } from "react-bootstrap";
 import './ProcessVideo.scss';
 import { eng, global } from '../../constant'
 import ReactPlayer from 'react-player'
-import { ModalCustom} from './ModalCustom'
+import { ModalCustom } from './ModalCustom'
 export const ProcessVideo = (props) => {
     const [currentVideo, setCurrentVideo] = useState(undefined);
-    const [processedVideoURL, setProcessedVideoURL] = useState(undefined);
+    const [processedVideoURL, setProcessedVideoURL] = useState(false);
     const [currentVideoURL, setCurrentVideoURL] = useState(undefined);
-    const [count, setCount] = useState(undefined);
+    const [count, setCount] = useState(300);
     const [isModalShow, setIsModalShow] = useState(false);
     const [contentModal, setContentModal] = useState('');
     const [titleModal, setTitleModal] = useState('');
@@ -18,9 +18,10 @@ export const ProcessVideo = (props) => {
     * Get processed image from flask server and set it into state
     * @return {void} 
     */
-    const fetchProcessedVideo = () => {
+    const fetchConcatVideo = () => {
         setProcessedVideoURL(true)
     }
+
     /**
     * Get processed image from flask server and set it into state
     * @return {void} 
@@ -62,7 +63,7 @@ export const ProcessVideo = (props) => {
     const uploadVideo = (event) => {
         const file = event.target.files[0];
         const extensionType = ['mp4']
-        const fileType = file.name.split('.')[file.name.split('.').length-1];
+        const fileType = file.name.split('.')[file.name.split('.').length - 1];
         if (extensionType.includes(fileType)) {
             setCurrentVideo(file)
             setCurrentVideoURL(URL.createObjectURL(file))
@@ -73,21 +74,21 @@ export const ProcessVideo = (props) => {
         }
 
     }
-  
+
     const triggerUploadButton = () => {
         uploadButton.current.click();
     }
 
     return (
         <div id="pageBraces2Teeth">
-            <ModalCustom 
-                isShow={isModalShow} 
-                title={titleModal} 
+            <ModalCustom
+                isShow={isModalShow}
+                title={titleModal}
                 variant={titleModal === eng.alert ? 'danger' : 'success'}
                 content={titleModal === eng.alert ? contentModal : eng.server_is_loading_model + ' in ' + count + 's ...'}
-                onHide={()=>setIsModalShow(false)}
-                onClick={()=>setIsModalShow(false)}
-                isShowFooter={titleModal === eng.alert ? true: false}>    
+                onHide={() => setIsModalShow(false)}
+                onClick={() => setIsModalShow(false)}
+                isShowFooter={titleModal === eng.alert ? true : false}>
             </ModalCustom>
 
             <Col>
@@ -101,13 +102,16 @@ export const ProcessVideo = (props) => {
                     <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
                     <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadVideo} />
                     <Button disabled={typeof currentVideoURL === 'undefined'} id="button" onClick={requireProcessVideo}>{eng.process}</Button>
-                    <Button id="button" disabled={!isGet} onClick={fetchProcessedVideo}>{eng.get}</Button>
-                
+                    <Button id="button" disabled={!isGet} onClick={fetchConcatVideo}>{eng.get}</Button>
+               
                 </Row>
-                <Row>
-                {processedVideoURL && <ReactPlayer controls={true} url={`${global.host}/processvideo`} />}
+                {processedVideoURL && <Row>
+                    <p className="margin-bottom-0">{eng.concat_video}</p>
+                    <ReactPlayer controls={true} url={`${global.host}/processvideo`} />
+                    <p className="margin-top-10">{eng.processed_video}</p>
+                    <ReactPlayer controls={true} url={`${global.host}/processoriginvideo`} />
 
-                </Row>
+                </Row>}
             </Col>
         </div>
     )
