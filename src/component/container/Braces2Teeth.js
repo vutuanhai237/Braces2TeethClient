@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Row, Button } from "react-bootstrap";
+import { Col, Row, Button, Badge } from "react-bootstrap";
 import './Braces2Teeth.scss';
 import { eng } from "../../constant/index";
 import Webcam from "react-webcam";
@@ -108,7 +108,9 @@ export const Braces2Teeth = (props) => {
         if (extensionType.includes(fileType)) {
             getBase64(file).then(data => {
                 setCurrentImage(data);
+                
             });
+            setProcessedImageBase64(undefined)
         } else {
             setIsModalShow(true);
             setTitleModal(eng.alert);
@@ -133,9 +135,13 @@ export const Braces2Teeth = (props) => {
                 {/* {currentImage && <img id="image" alt="" src={currentImage} />} */}
             </Row>
             <Row>
-                <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
+                <Button style={{width: '200px'}} id="button" onClick={triggerUploadButton}>
+                    {eng.upload_and_crop} <Badge variant="light">1</Badge>
+                </Button>
                 <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadImage} />
-                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
+                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>
+                    {eng.process } <Badge variant="light">2</Badge>
+                </Button>
             </Row>
         </Col>
     }
@@ -152,9 +158,10 @@ export const Braces2Teeth = (props) => {
                 {currentImage && <img id="image" className="mirror-effect" alt="" src={currentImage} />}
             </Row>
             <Row>
-                <Button id="button" onClick={capture}>{eng.capture}</Button>
-                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>{eng.process}</Button>
-
+                <Button id="button" onClick={capture}>
+                    {eng.capture} <Badge variant="light">1</Badge>
+                </Button>
+  
             </Row>
         </Col>
     }
@@ -198,7 +205,9 @@ export const Braces2Teeth = (props) => {
                                 <img id="image" alt="" src={processedImageBase64} className="d-inline-block align-top" />
                             </Row>
                             <Row>
-                                {currentProcessedImageFile && <Button id="button" href={URL.createObjectURL(currentProcessedImageFile)} download>{eng.download}</Button>}
+                                {currentProcessedImageFile && <Button style={{width: '160px'}} id="button" href={URL.createObjectURL(currentProcessedImageFile)} download>
+                                    {eng.download} <Badge variant="light">3</Badge>
+                                </Button>}
 
                             </Row>
                         </Col>

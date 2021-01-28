@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Col, Row, Button } from "react-bootstrap";
+import { Col, Row, Button, Badge } from "react-bootstrap";
 import './ProcessVideo.scss';
 import { eng, global } from '../../constant'
 import ReactPlayer from 'react-player'
@@ -99,19 +99,30 @@ export const ProcessVideo = (props) => {
                     {currentVideoURL && <ReactPlayer controls={true} url={currentVideoURL} />}
                 </Row>
                 <Row>
-                    <Button id="button" onClick={triggerUploadButton}>{eng.upload}</Button>
+                    <Button id="button" onClick={triggerUploadButton}>
+                        {eng.upload} <Badge variant="light">1</Badge>
+                    </Button>
                     <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadVideo} />
-                    <Button disabled={typeof currentVideoURL === 'undefined'} id="button" onClick={requireProcessVideo}>{eng.process}</Button>
-                    <Button id="button" disabled={!isGet} onClick={fetchConcatVideo}>{eng.get}</Button>
+                    <Button disabled={typeof currentVideoURL === 'undefined'} id="button" onClick={requireProcessVideo}>
+                        {eng.process} <Badge variant="light">2</Badge>
+                    </Button>
+                    <Button variant="success" id="button" disabled={!isGet} onClick={fetchConcatVideo}>
+                        {eng.get} <Badge variant="light">3</Badge>
+                    </Button>
                
                 </Row>
-                {processedVideoURL && <Row>
-                    <p className="margin-bottom-0">{eng.concat_video}</p>
-                    <ReactPlayer controls={true} url={`${global.host}/processvideo`} />
+                {processedVideoURL && <Col style={{paddingLeft: '0px'}}>
+                    <Row><p className="margin-bottom-0">{eng.concat_video}</p></Row>
+                    <Row><ReactPlayer controls={true} url={`${global.host}/processvideo`} />
+                    </Row>
+                    <Row>
                     <p className="margin-top-10">{eng.processed_video}</p>
+                    </Row>
+                    <Row>
                     <ReactPlayer controls={true} url={`${global.host}/processoriginvideo`} />
+                    </Row>
 
-                </Row>}
+                </Col>}
             </Col>
         </div>
     )

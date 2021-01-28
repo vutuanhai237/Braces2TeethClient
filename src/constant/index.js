@@ -1,5 +1,5 @@
 export const global = {
-    host: 'http://localhost:6868',
+    host: 'http://localhost:5000',
     port: '',
     github: 'https://github.com/vutuanhai237',
     youtube: 'https://www.youtube.com/channel/UCeT_vjcZwjXEzTOFtEX-PZg/',
@@ -7,7 +7,9 @@ export const global = {
     facebook: 'https://www.facebook.com/vutuanhai237',
 }
 export const eng = {
+    the_video_has_been_processed_completely: 'The video has been processed completely!',
     ok: 'OK',
+    upload_and_crop: 'Upload & crop',
     alert: 'Alert',
     take_a_shot: 'take a shot',
     concat_video: 'Concat video',
