@@ -1,42 +1,85 @@
 import React, { useState, useEffect } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Button } from "react-bootstrap";
 import './CropImage.scss';
+import { global, eng } from '../../constant'
 
-const CropImage = ({isReset, currentImage, parentCallback}) => {
+const CropImage = ({ isReset, currentImage, parentCallback }) => {
+    const defaultCrop = {
+        unit: 'px',
+        width: 50,
+        aspect: 1 / 1,
+        x: 0,
+        y: 0
+    };
     const [src, setSrc] = useState(currentImage);
-    const [imageRef, setImageRef] = useState();
+    const [imageRef, setImageRef] = useState(null);
     const [croppedImageUrl, setCroppedImageUrl] = useState(null);
-    const [crop, setCrop] = useState({
-        unit: '%',
-        width: 30,
-        aspect: 1 / 1
-    });
+    const [isHideCheckbox, setIsHideCheckbox] = useState(false);
+    const [crop, setCrop] = useState(defaultCrop);
 
     useEffect(() => {
-        if (isReset) {
-            setCroppedImageUrl(null);
-        }
-        setSrc(currentImage)
+        setSrc(currentImage);
+        setCrop(defaultCrop);
+        setCroppedImageUrl(null);
+        setIsHideCheckbox(false);
+        console.log(12)
     }, [currentImage])
+    const autoCenteringCanvas = () => {
+        const url = src;
+        fetch(url)
+            .then(res => res.blob())
+            .then(blob => {
+                const file = new File([blob], "image.png", { type: "image/png" });
+                var formdata = new FormData();
+                formdata.append("file", file);
+                var requestOptions = {
+                    method: 'POST',
+                    body: formdata,
+                    redirect: 'follow'
+                };
 
+                fetch(`${global.host}/detectmouth`, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+                        const intListParams = (result.split(' ')).map(e => parseInt(e))
+                        const greaterAspect = intListParams[2] > intListParams[3] ? intListParams[2]: intListParams[3]
+                        const cropObject = {
+                            unit: 'px',
+                            aspect: 1,
+                            width: greaterAspect,
+                            height: greaterAspect,
+                            x: intListParams[0],
+                            y: intListParams[1],
+                        }
+
+                        onCropChange(cropObject)
+                    })
+                    .catch(error => console.log('error', error));
+                return false;
+            })
+
+
+    }
+   
+    const setAutoCentering = () => {
+        onCropComplete(crop);
+        setIsHideCheckbox(true);
+    }
     // If you setState the crop in here you should return false.
     const onImageLoaded = (image) => {
         setImageRef(image);
+        return autoCenteringCanvas();
     };
 
-    const onCropComplete = (crop) => {
-        makeClientCrop(crop);
-    };
 
-    const onCropChange = (crop, percentCrop) => {
-        // You could also use percentCrop:
-        // this.setState({ crop: percentCrop });
+    const onCropChange = (crop) => {
         setCrop(crop);
     };
 
-    const makeClientCrop = async (crop) => {
+    const onCropComplete = async (crop) => {
+       
         if (imageRef && crop.width && crop.height) {
             const croppedImageUrl = await getCroppedImg(
                 imageRef,
@@ -45,7 +88,6 @@ const CropImage = ({isReset, currentImage, parentCallback}) => {
             );
             setCroppedImageUrl(croppedImageUrl);
             parentCallback(croppedImageUrl);
-            //props.parentCallBack(croppedImageUrl)
         }
     }
 
@@ -99,15 +141,18 @@ const CropImage = ({isReset, currentImage, parentCallback}) => {
                         onChange={onCropChange}
                     />
                 )}
+
             </Row>
-                {src && <hr></hr>}
+            {src && !isHideCheckbox && <Row style={{marginTop: '10px'}}>
+                <Button id="button" onClick={setAutoCentering}>{eng.crop}</Button>
+            </Row>}
+            
             <Row>
                 {croppedImageUrl && (
-                    <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+                    <img alt="Crop" className="cropped-image" src={croppedImageUrl} />
                 )}
 
             </Row>
-
         </Col>
     );
 

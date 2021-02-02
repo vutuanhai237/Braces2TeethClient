@@ -36,6 +36,7 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const updateCroppedImage = (imgURL) => {
+        console.log(imgURL)
         getFileFromBase64(imgURL, setCurrentImageFile)
     }
     /**
@@ -191,7 +192,6 @@ export const Braces2Teeth = (props) => {
                                 <div onClick={() => changeMode('webcam')} id="link" ><p>{eng.take_a_shot}</p></div>
                             </Row>
                         </Col>
-
                         <CropImage isReset={typeof currentImage === 'undefined' ? true : false} parentCallback={(img) => updateCroppedImage(img)} currentImage={currentImage} />
                         {mode === 'upload' ? UploadComponent() : WebcamComponent()}
                     </div>
@@ -220,7 +220,5 @@ export const Braces2Teeth = (props) => {
         </div>
     )
 }
-
-
 
 

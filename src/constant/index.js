@@ -7,6 +7,8 @@ export const global = {
     facebook: 'https://www.facebook.com/vutuanhai237',
 }
 export const eng = {
+    crop: 'Crop',
+    focus_on_mouth: 'Focus on mouth',
     the_video_has_been_processed_completely: 'The video has been processed completely!',
     ok: 'OK',
     upload_and_crop: 'Upload & crop',
