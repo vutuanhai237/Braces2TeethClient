@@ -1,7 +1,7 @@
 import {
     BRACES2TEETH_UPLOADED_IMAGE_ACTION,
     BRACES2TEETH_SELECTED_MODEL_ACTION,
-} from "../constant/index.js"
+} from '../constant/index.js'
 
 export function postImage(image) {
     return {

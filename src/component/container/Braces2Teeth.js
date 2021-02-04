@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Col, Row, Button, Badge } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from 'react';
+import { Col, Row, Button, Badge } from 'react-bootstrap';
 import './Braces2Teeth.scss';
-import { eng } from "../../constant/index";
-import Webcam from "react-webcam";
+import { eng } from '../../constant/index';
+import Webcam from 'react-webcam';
 import CropImage from './CropImage'
 import { global } from '../../constant'
 import {ModalCustom} from './ModalCustom'
@@ -36,7 +36,6 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const updateCroppedImage = (imgURL) => {
-        console.log(imgURL)
         getFileFromBase64(imgURL, setCurrentImageFile)
     }
     /**
@@ -47,7 +46,7 @@ export const Braces2Teeth = (props) => {
         setTitleModal(eng.notification);
         setIsModalShow(true);
         var formdata = new FormData();
-        formdata.append("file", currentImageFile);
+        formdata.append('file', currentImageFile);
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -83,7 +82,7 @@ export const Braces2Teeth = (props) => {
         fetch(url)
             .then(res => res.blob())
             .then(blob => {
-                const file = new File([blob], "image.png", { type: "image/png" });
+                const file = new File([blob], 'image.png', { type: 'image/png' });
                 callback(file)
                 return file;
             })
@@ -103,20 +102,25 @@ export const Braces2Teeth = (props) => {
     * @return {void} 
     */
     const uploadImage = (event) => {
-        const file = event.target.files[0];
-        const extensionType = ['jpg', 'jpeg', 'png']
-        const fileType = file.name.split('.')[file.name.split('.').length - 1];
-        if (extensionType.includes(fileType)) {
-            getBase64(file).then(data => {
-                setCurrentImage(data);
-                
-            });
-            setProcessedImageBase64(undefined)
-        } else {
-            setIsModalShow(true);
-            setTitleModal(eng.alert);
-            setContentModal('Please upload jpg, png or jpeg file!');
+        try {
+            const file = event.target.files[0];
+            const extensionType = ['jpg', 'jpeg', 'png']
+            const fileType = file.name.split('.')[file.name.split('.').length - 1];
+            if (extensionType.includes(fileType)) {
+                getBase64(file).then(data => {
+                    setCurrentImage(data);
+                    
+                });
+                setProcessedImageBase64(undefined)
+            } else {
+                setIsModalShow(true);
+                setTitleModal(eng.alert);
+                setContentModal('Please upload jpg, png or jpeg file!');
+            }
+        } catch (e) {
+
         }
+      
     }
 
     const changeMode = (mode) => {
@@ -133,15 +137,15 @@ export const Braces2Teeth = (props) => {
         return <Col>
 
             <Row>
-                {/* {currentImage && <img id="image" alt="" src={currentImage} />} */}
+                {/* {currentImage && <img id='image' alt='' src={currentImage} />} */}
             </Row>
             <Row>
-                <Button style={{width: '200px'}} id="button" onClick={triggerUploadButton}>
-                    {eng.upload_and_crop} <Badge variant="light">1</Badge>
+                <Button id='button' onClick={triggerUploadButton}>
+                    {eng.upload} <Badge variant='light'>1</Badge>
                 </Button>
-                <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadImage} />
-                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id="button" onClick={fetchProcessedImage}>
-                    {eng.process } <Badge variant="light">2</Badge>
+                <input ref={uploadButton} style={{ display: 'none' }} type='file' onChange={uploadImage} />
+                <Button disabled={typeof currentImage === 'undefined' || typeof currentImageFile === 'undefined'} id='button' onClick={fetchProcessedImage}>
+                    {eng.process } <Badge variant='light'>3</Badge>
                 </Button>
             </Row>
         </Col>
@@ -150,17 +154,17 @@ export const Braces2Teeth = (props) => {
     const WebcamComponent = () => {
         return <Col>
             <Row>
-                <Webcam className="mirror-effect" audio={false} ref={webcamRef} screenshotFormat="image/png" />
+                <Webcam className='mirror-effect' audio={false} ref={webcamRef} screenshotFormat='image/png' />
             </Row>
             <Row>
                 {currentImage && <p style={{ marginTop: '12px' }}>Your image </p>}
             </Row>
             <Row>
-                {currentImage && <img id="image" className="mirror-effect" alt="" src={currentImage} />}
+                {currentImage && <img id='image' className='mirror-effect' alt='' src={currentImage} />}
             </Row>
             <Row>
-                <Button id="button" onClick={capture}>
-                    {eng.capture} <Badge variant="light">1</Badge>
+                <Button id='button' onClick={capture}>
+                    {eng.capture} <Badge variant='light'>1</Badge>
                 </Button>
   
             </Row>
@@ -169,7 +173,7 @@ export const Braces2Teeth = (props) => {
 
 
     return (
-        <div id="pageBraces2Teeth">
+        <div id='pageBraces2Teeth'>
             <ModalCustom 
                 isShow={isModalShow} 
                 title={titleModal} 
@@ -181,38 +185,38 @@ export const Braces2Teeth = (props) => {
             </ModalCustom>
             <Col>
                 <Row>
-                    <p id="pageTitle">{eng.braces2teeth}</p>
+                    <p id='pageTitle'>{eng.braces2teeth}</p>
                 </Row>
                 <Row>
-                    <div id="componentUploadImage">
+                    <div id='componentUploadImage'>
                         <Col>
                             <Row>
-                                <div onClick={() => changeMode('upload')}><p id="link">{eng.upload}&nbsp;</p></div>
+                                <div onClick={() => changeMode('upload')}><p id='link'>{eng.upload}&nbsp;</p></div>
                                 <p>{eng.your_image_or}&nbsp;</p>
-                                <div onClick={() => changeMode('webcam')} id="link" ><p>{eng.take_a_shot}</p></div>
+                                <div onClick={() => changeMode('webcam')} id='link' ><p>{eng.take_a_shot}</p></div>
                             </Row>
                         </Col>
                         <CropImage isReset={typeof currentImage === 'undefined' ? true : false} parentCallback={(img) => updateCroppedImage(img)} currentImage={currentImage} />
                         {mode === 'upload' ? UploadComponent() : WebcamComponent()}
                     </div>
-                    {currentImage && <div id="verticalLine"></div>}
-                    {processedImageBase64 && <div id="componentExcuteModel">
+                    {currentImage && <div id='verticalLine'></div>}
+                    {processedImageBase64 && <div id='componentExcuteModel'>
                         <Col>
                             <Row>
-                                <p>{eng.processed_image}</p>
+                                <p style={{fontWeight: 'bold'}}>{eng.processed_image}</p>
                             </Row>
                             <Row>
-                                <img id="image" alt="" src={processedImageBase64} className="d-inline-block align-top" />
+                                <img id='image' alt='' src={processedImageBase64} className='d-inline-block align-top' />
                             </Row>
                             <Row>
-                                {currentProcessedImageFile && <Button style={{width: '160px'}} id="button" href={URL.createObjectURL(currentProcessedImageFile)} download>
-                                    {eng.download} <Badge variant="light">3</Badge>
+                                {currentProcessedImageFile && <Button style={{width: '160px'}} id='button' href={URL.createObjectURL(currentProcessedImageFile)} download>
+                                    {eng.download} <Badge variant='light'>3</Badge>
                                 </Button>}
 
                             </Row>
                         </Col>
 
-                        <div id="verticalLine"></div>
+                        <div id='verticalLine'></div>
                     </div>}
                 </Row>
 

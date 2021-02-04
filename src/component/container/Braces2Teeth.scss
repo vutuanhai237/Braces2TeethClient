@@ -9,9 +9,7 @@
 }
 
 #verticalLine {
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: 30px;
-  margin-right: 30px;
 }
 
 #componentUploadImage {
@@ -41,6 +39,7 @@
 #image {
   height: 256px;
   width: 256px;
+  margin-bottom: 20px;
 }
 
 .mirror-effect {
@@ -48,15 +47,12 @@
   transform: scaleX(-1);
 }
 
-
 @media (max-width: 767px) {
   #componentUploadImage #image {
     margin-top: 0px;
   }
-}
-
-@media (max-width: 767px) {
   #verticalLine {
-    height: 0px;
+    display: none;
   }
 }
+

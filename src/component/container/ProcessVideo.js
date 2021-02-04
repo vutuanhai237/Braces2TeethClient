@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Col, Row, Button, Badge } from "react-bootstrap";
+import React, { useRef, useState } from 'react';
+import { Col, Row, Button, Badge } from 'react-bootstrap';
 import './ProcessVideo.scss';
 import { eng, global } from '../../constant'
 import ReactPlayer from 'react-player'
@@ -14,6 +14,7 @@ export const ProcessVideo = (props) => {
     const [titleModal, setTitleModal] = useState('');
     const [isGet, setIsGet] = useState(false);
     const uploadButton = useRef(null);
+    const getButton = useRef(null);
     /**
     * Get processed image from flask server and set it into state
     * @return {void} 
@@ -29,7 +30,7 @@ export const ProcessVideo = (props) => {
     const requireProcessVideo = () => {
         setIsGet(true);
         var formdata = new FormData();
-        formdata.append("file", currentVideo);
+        formdata.append('file', currentVideo);
         var requestOptions = {
             method: 'POST',
             body: formdata,
@@ -47,7 +48,8 @@ export const ProcessVideo = (props) => {
             .then(response => response.text())
             .then(result => {
                 setIsModalShow(false);
-                clearInterval(timeinterval)
+                clearInterval(timeinterval);
+                getButton.current.click();
             })
             .catch(error => {
                 console.log('error', error)
@@ -80,7 +82,7 @@ export const ProcessVideo = (props) => {
     }
 
     return (
-        <div id="pageBraces2Teeth">
+        <div id='pageBraces2Teeth'>
             <ModalCustom
                 isShow={isModalShow}
                 title={titleModal}
@@ -93,33 +95,33 @@ export const ProcessVideo = (props) => {
 
             <Col>
                 <Row>
-                    <p id="pageTitle">{eng.braces2teeth_video}</p>
+                    <p id='pageTitle'>{eng.braces2teeth_video}</p>
                 </Row>
                 <Row>
-                    {currentVideoURL && <ReactPlayer controls={true} url={currentVideoURL} />}
+                    {currentVideoURL && <ReactPlayer style={{ marginBottom: '20px' }} controls={true} url={currentVideoURL} />}
                 </Row>
                 <Row>
-                    <Button id="button" onClick={triggerUploadButton}>
-                        {eng.upload} <Badge variant="light">1</Badge>
+                    <Button id='button' onClick={triggerUploadButton}>
+                        {eng.upload} <Badge variant='light'>1</Badge>
                     </Button>
-                    <input ref={uploadButton} style={{ display: "none" }} type="file" onChange={uploadVideo} />
-                    <Button disabled={typeof currentVideoURL === 'undefined'} id="button" onClick={requireProcessVideo}>
-                        {eng.process} <Badge variant="light">2</Badge>
+                    <input ref={uploadButton} style={{ display: 'none' }} type='file' onChange={uploadVideo} />
+                    <Button disabled={typeof currentVideoURL === 'undefined'} id='button' onClick={requireProcessVideo}>
+                        {eng.process} <Badge variant='light'>2</Badge>
                     </Button>
-                    <Button variant="success" id="button" disabled={!isGet} onClick={fetchConcatVideo}>
-                        {eng.get} <Badge variant="light">3</Badge>
+                    <Button ref={getButton} style={{ display: 'none' }} variant='success' id='button' disabled={!isGet} onClick={fetchConcatVideo}>
+                        {eng.get} <Badge variant='light'>3</Badge>
                     </Button>
-               
+
                 </Row>
-                {processedVideoURL && <Col style={{paddingLeft: '0px'}}>
-                    <Row><p className="margin-bottom-0">{eng.concat_video}</p></Row>
+                {processedVideoURL && <Col style={{ paddingLeft: '0px' }}>
+                    <Row><p className='margin-bottom-0'>{eng.concat_video}</p></Row>
                     <Row><ReactPlayer controls={true} url={`${global.host}/processvideo`} />
                     </Row>
                     <Row>
-                    <p className="margin-top-10">{eng.processed_video}</p>
+                        <p className='margin-top-10'>{eng.processed_video}</p>
                     </Row>
                     <Row>
-                    <ReactPlayer controls={true} url={`${global.host}/processoriginvideo`} />
+                        <ReactPlayer controls={true} url={`${global.host}/processoriginvideo`} />
                     </Row>
 
                 </Col>}

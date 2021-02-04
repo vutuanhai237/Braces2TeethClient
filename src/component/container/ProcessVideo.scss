@@ -9,9 +9,7 @@
 }
 
 #verticalLine {
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
   margin-left: 30px;
-  margin-right: 30px;
 }
 
 #componentUploadImage {
@@ -50,10 +48,12 @@
 
 .margin-bottom-0 {
   margin-bottom: 0px;
+  font-weight: bold;
 }
 
 .margin-top-10 {
   margin-top: 10px;
+  font-weight: bold;
 }
 
 @media (max-width: 767px) {

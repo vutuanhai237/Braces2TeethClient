@@ -1,7 +1,7 @@
 
 const initialState = {
     uploadedImage: null,
-    selectedModel: "",
+    selectedModel: '',
 };
 
 function Braces2TeethReducer(state = initialState, action) {
