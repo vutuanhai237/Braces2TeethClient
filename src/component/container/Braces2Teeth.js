@@ -53,7 +53,7 @@ export const Braces2Teeth = (props) => {
             redirect: 'follow'
         };
 
-        var counttemp = 30;
+        var counttemp = 15;
         const timeinterval = setInterval(() => {
             counttemp = counttemp - 1
             setCount(counttemp)

@@ -37,7 +37,7 @@ export const ProcessVideo = (props) => {
             redirect: 'follow'
         };
 
-        var counttemp = 300;
+        var counttemp = 100;
         const timeinterval = setInterval(() => {
             counttemp = counttemp - 1
             setCount(counttemp)
