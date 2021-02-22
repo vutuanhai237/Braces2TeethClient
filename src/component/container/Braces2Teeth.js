@@ -12,7 +12,7 @@ export const Braces2Teeth = (props) => {
     const [currentImageFile, setCurrentImageFile] = useState(undefined);
     const [currentProcessedImageFile, setCurrentProcessedImageFile] = useState(undefined);
     const [processedImageBase64, setProcessedImageBase64] = useState();
-    const [count, setCount] = useState(30);
+    const [count, setCount] = useState(15);
     const [isModalShow, setIsModalShow] = useState(false);
     const [contentModal, setContentModal] = useState('');
     const [titleModal, setTitleModal] = useState('');

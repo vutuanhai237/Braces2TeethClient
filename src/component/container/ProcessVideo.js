@@ -8,7 +8,7 @@ export const ProcessVideo = (props) => {
     const [currentVideo, setCurrentVideo] = useState(undefined);
     const [processedVideoURL, setProcessedVideoURL] = useState(false);
     const [currentVideoURL, setCurrentVideoURL] = useState(undefined);
-    const [count, setCount] = useState(300);
+    const [count, setCount] = useState(100);
     const [isModalShow, setIsModalShow] = useState(false);
     const [contentModal, setContentModal] = useState('');
     const [titleModal, setTitleModal] = useState('');
